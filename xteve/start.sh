@@ -2,23 +2,33 @@
 
 # Check for missing Group / PGID
 PGROUPNAME=xteve
+if [ -e "${PGID}" ]
+then
+    echo "PGID not set, defaulting to 100" | ts '%Y-%m-%d %H:%M:%.S'
+    PGID=100
+fi
 /bin/egrep  -i "^${PGID}:" /etc/passwd
 if [ $? -eq 0 ]; then
-   echo "A group with PGID $PGID already exists in /etc/passwd, nothing to do."
+   echo "A group with PGID $PGID already exists in /etc/passwd, nothing to do." | ts '%Y-%m-%d %H:%M:%.S'
 else
-   echo "A group with PGID $PGID does not exist, adding a group called 'xteve' with PGID $PGID"
+   echo "A group with PGID $PGID does not exist, adding a group called 'xteve' with PGID $PGID" | ts '%Y-%m-%d %H:%M:%.S'
    groupadd -g $PGID $PGROUPNAME
 fi
 
 # Check for missing User / PUID
 PUSERNAME=xteve
+if [ -e "${PUID}" ]
+then
+    echo "PUID not set, defaulting to 99" | ts '%Y-%m-%d %H:%M:%.S'
+    PUID=99
+fi
 /bin/egrep  -i "^.+:${PUID}:" /etc/passwd
 if [ $? -eq 0 ]; then
-   echo "An user with PUID $PUID already exists in /etc/passwd, nothing to do."
+   echo "An user with PUID $PUID already exists in /etc/passwd, nothing to do." | ts '%Y-%m-%d %H:%M:%.S'
    PUSERNAME=$(/bin/egrep  -i "^.+:${PUID}:" /etc/passwd | cut -d ":" -f1)
 else
-   echo "An user with PUID $PUID does not exist, adding an user called 'xteve user' with PUID $PUID"
-   useradd -c "xteve user" -g $PGID -u $PUID $PUSERNAME
+   echo "An user with PUID $PUID does not exist, adding an user called 'xteve user' with PUID $PUID" | ts '%Y-%m-%d %H:%M:%.S'
+   useradd -c "xteve user" -g $PGID -u $PUID $PUSERNAME -m
 fi
 
 if [[ ! -e /config/xteve ]]; then
@@ -62,7 +72,9 @@ if [ -e /proc/$xtevepid ]; then
         pgrep -o -x xteve
         if [ $? -eq 0 ]
         then
-            sleep 10
+            # keep the network traffic over the vpn active (vpn providers might time us out)
+            ping -c 10 8.8.8.8 2>&1 > /dev/null
+            sleep 5
         else
             echo "[error] xteve died!" | ts '%Y-%m-%d %H:%M:%.S'
             exit 1

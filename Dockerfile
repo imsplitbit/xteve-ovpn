@@ -8,7 +8,7 @@ ENV DEBIAN_FRONTEND noninteractive
 WORKDIR /opt
 
 # Make directories
-RUN mkdir -p /config/openvpn /config/iptv-vpn
+RUN mkdir -p /config/openvpn /config/xteve /home/xteve
 
 # Update, upgrade and install required packages
 RUN apt update \
@@ -26,6 +26,7 @@ RUN apt update \
     net-tools \
     dos2unix \
     kmod \
+    unzip \
     iptables \
     procps \
     ipcalc\
@@ -54,5 +55,5 @@ ADD xteve /etc/xteve
 
 RUN chmod +x /etc/xteve/*.sh /etc/openvpn/*.sh
 
-EXPOSE 8080
+EXPOSE 34400
 CMD ["/bin/bash", "/etc/openvpn/start.sh"]

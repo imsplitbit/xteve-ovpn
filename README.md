@@ -1,5 +1,5 @@
-# iptv-vpn
-Proxy IPTV through VPN tunnel
+# xteve-vpn
+xteve through VPN tunnel
 
 Docker container that will instantiate an openvpn tunnel for proxying iptv traffic.
 

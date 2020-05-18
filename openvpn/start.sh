@@ -37,6 +37,7 @@ if [[ $VPN_ENABLED == "yes" ]]; then
 
 	# if ovpn file not found in /config/openvpn then exit
 	if [[ -z "${VPN_CONFIG}" ]]; then
+		ls /config
 		echo "[crit] No OpenVPN config file located in /config/openvpn/ (ovpn extension), please download from your VPN provider and then restart this container, exiting..." | ts '%Y-%m-%d %H:%M:%.S' && exit 1
 	fi
 
