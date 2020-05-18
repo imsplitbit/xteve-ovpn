@@ -37,6 +37,8 @@ RUN apt update \
     zlib1g \
     tzdata \
     tmux \
+    vlc \
+    ffmpeg \
     && apt-get clean \
     && rm -rf \
     /var/lib/apt/lists/* \
