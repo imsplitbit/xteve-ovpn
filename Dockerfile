@@ -4,7 +4,6 @@ FROM debian:buster
 MAINTAINER imsplitbit
 
 ENV DEBIAN_FRONTEND noninteractive
-ENV IPTV_VERSION 2.0.1
 
 WORKDIR /opt
 
@@ -36,24 +35,24 @@ RUN apt update \
     libkrb5-3 \
     zlib1g \
     tzdata \
+    tmux \
     && apt-get clean \
     && rm -rf \
     /var/lib/apt/lists/* \
     /tmp/* \
     /var/tmp/*
 
-# Install iptv-proxy
-RUN curl -o iptv-proxy.deb -skSL "https://github.com/pierre-emmanuelJ/iptv-proxy/releases/download/v${IPTV_VERSION}/iptv-proxy_${IPTV_VERSION}_linux_amd64.deb" \
-    && dpkg -i iptv-proxy.deb \
-    && rm -f iptv-proxy.deb
+# Install xteve
+RUN wget https://github.com/xteve-project/xTeVe-Downloads/raw/master/xteve_linux_amd64.zip -O temp.zip; unzip temp.zip -d /usr/bin/; rm temp.zip
+RUN chmod +x /usr/bin/xteve
 
 
 VOLUME /config
 
-ADD openvpn/ /etc/openvpn/
-ADD iptv-proxy/ /etc/iptv-proxy/
+ADD openvpn/ /etc/openvpn
+ADD xteve /etc/xteve
 
-RUN chmod +x /etc/iptv-proxy/*.sh /etc/openvpn/*.sh
+RUN chmod +x /etc/xteve/*.sh /etc/openvpn/*.sh
 
 EXPOSE 8080
 CMD ["/bin/bash", "/etc/openvpn/start.sh"]
